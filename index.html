@@ -1,0 +1,264 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.shell{background:#0b1520;border:1px solid #1a3a52;border-radius:10px;overflow:hidden;font-family:var(--font-mono);padding-bottom:1.5rem}
+.topbar{background:#0e1e2e;border-bottom:1px solid #1a3a52;padding:10px 16px;display:flex;align-items:center;gap:8px}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot-r{background:#993C1D}.dot-y{background:#854F0B}.dot-g{background:#3B6D11}
+.topbar-title{margin-left:8px;font-size:11px;color:#4a7a9b;letter-spacing:.08em}
+.topbar-right{margin-left:auto;font-size:11px;color:#1D9E75;letter-spacing:.05em}
+.hdr{padding:16px 20px 0}
+.proto-row{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:4px}
+.proto-title{font-size:16px;font-weight:500;color:#9FE1CB;letter-spacing:.06em}
+.proto-sub{font-size:11px;color:#2e6a88;margin-top:2px}
+.status-badge{font-size:11px;padding:4px 12px;border-radius:3px;border:1px solid;letter-spacing:.06em;font-weight:500}
+.status-pending{border-color:#854F0B;color:#EF9F27;background:#1a1200}
+.status-clear{border-color:#0F6E56;color:#5DCAA5;background:#051a12}
+.divider{border:none;border-top:1px solid #1a3a52;margin:12px 0}
+.info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 20px}
+.info-field{display:flex;flex-direction:column;gap:3px}
+.info-label{font-size:10px;color:#2e6a88;letter-spacing:.08em;text-transform:uppercase}
+.info-input{background:#0e1e2e;border:1px solid #1a3a52;border-radius:4px;padding:5px 8px;font-size:12px;font-family:var(--font-mono);color:#9FE1CB;outline:none;width:100%}
+.info-input:focus{border-color:#1D9E75}
+.info-input::placeholder{color:#1e4060}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 20px 0}
+.stat{background:#0e1e2e;border:1px solid #1a3a52;border-radius:5px;padding:8px 12px;text-align:center}
+.stat-num{font-size:20px;font-weight:500;color:#5DCAA5;line-height:1}
+.stat-lbl{font-size:10px;color:#2e6a88;letter-spacing:.06em;margin-top:3px;text-transform:uppercase}
+.prog-wrap{padding:10px 20px 0}
+.prog-meta{display:flex;justify-content:space-between;font-size:10px;color:#2e6a88;margin-bottom:4px;letter-spacing:.04em}
+.prog-track{height:4px;background:#0e1e2e;border-radius:2px;border:1px solid #1a3a52;overflow:hidden}
+.prog-fill{height:100%;background:#1D9E75;border-radius:2px;transition:width .4s ease}
+.sections{padding:12px 20px 0}
+.sec{border:1px solid #1a3a52;border-radius:5px;margin-bottom:8px;overflow:hidden}
+.sec-hdr{display:flex;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;background:#0e1e2e;border-left:3px solid #1a3a52}
+.sec-hdr:hover{background:#111e2c}
+.sec-hdr.s-apps{border-left-color:#378ADD}
+.sec-hdr.s-media{border-left-color:#D85A30}
+.sec-hdr.s-accounts{border-left-color:#D4537E}
+.sec-hdr.s-browser{border-left-color:#7F77DD}
+.sec-hdr.s-network{border-left-color:#BA7517}
+.sec-hdr.s-settings{border-left-color:#1D9E75}
+.sec-hdr.s-final{border-left-color:#5DCAA5}
+.sec-icon{font-size:15px;color:#4a7a9b;width:18px;text-align:center}
+.sec-name{font-size:12px;font-weight:500;color:#7ab8d4;letter-spacing:.04em;flex:1}
+.sec-badge{font-size:10px;padding:2px 8px;border-radius:3px;letter-spacing:.04em}
+.b-done{background:#051a12;color:#5DCAA5;border:1px solid #0F6E56}
+.b-partial{background:#1a1200;color:#EF9F27;border:1px solid #854F0B}
+.b-empty{background:#0e1e2e;color:#2e6a88;border:1px solid #1a3a52}
+.chevron{font-size:12px;color:#2e6a88;transition:transform .2s}
+.chevron.open{transform:rotate(90deg)}
+.items-block{border-top:1px solid #1a3a52}
+.row{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-bottom:1px solid #0e1e2e;cursor:pointer}
+.row:last-child{border-bottom:none}
+.row:hover{background:#0d1a27}
+.chk-wrap{margin-top:2px;flex-shrink:0}
+.chk{width:14px;height:14px;accent-color:#1D9E75;cursor:pointer}
+.row-body{flex:1}
+.row-lbl{font-size:12px;color:#7ab8d4;line-height:1.5;font-family:var(--font-mono)}
+.row-lbl.done{color:#1e4060;text-decoration:line-through}
+.row-note{font-size:10px;color:#1e4060;margin-top:2px;font-family:var(--font-mono)}
+.footer-area{padding:12px 20px 0;display:flex;gap:8px}
+.notes-in{flex:1;background:#0e1e2e;border:1px solid #1a3a52;border-radius:4px;padding:7px 10px;font-size:11px;font-family:var(--font-mono);color:#5DCAA5;outline:none;resize:none;height:36px}
+.notes-in::placeholder{color:#1e4060}
+.notes-in:focus{border-color:#1D9E75}
+.btn-reset{background:#0e1e2e;border:1px solid #1a3a52;border-radius:4px;padding:0 14px;font-size:11px;font-family:var(--font-mono);color:#4a7a9b;cursor:pointer;letter-spacing:.04em}
+.btn-reset:hover{border-color:#1D9E75;color:#5DCAA5}
+.clear-banner{display:none;margin:12px 20px 0;background:#051a12;border:1px solid #0F6E56;border-radius:5px;padding:10px 16px;text-align:center}
+.clear-banner-text{font-size:13px;color:#5DCAA5;letter-spacing:.1em;font-weight:500}
+.clear-banner-sub{font-size:10px;color:#0F6E56;margin-top:3px;letter-spacing:.05em}
+</style>
+
+<div class="shell">
+  <h2 class="sr-only">Android tablet refresh protocol checklist for IT staff</h2>
+  <div class="topbar">
+    <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+    <span class="topbar-title">IT_OPS // DEVICE_REFRESH_PROTOCOL v2.1 // ANDROID</span>
+    <span class="topbar-right" id="clock-display"></span>
+  </div>
+  <div class="hdr">
+    <div class="proto-row">
+      <div>
+        <div class="proto-title">DEVICE REFRESH CHECKLIST</div>
+        <div class="proto-sub">Complete all tasks before redeployment — do not skip sections</div>
+      </div>
+      <div class="status-badge status-pending" id="status-badge">● PENDING CLEARANCE</div>
+    </div>
+  </div>
+  <hr class="divider">
+  <div class="info-grid">
+    <div class="info-field"><span class="info-label">Asset tag</span><input class="info-input" id="f-asset" placeholder="e.g. TAB-0042" /></div>
+    <div class="info-field"><span class="info-label">Serial number</span><input class="info-input" id="f-serial" placeholder="e.g. R52T800XXXX" /></div>
+    <div class="info-field"><span class="info-label">Model</span><input class="info-input" id="f-model" placeholder="e.g. Samsung Tab A8" /></div>
+    <div class="info-field"><span class="info-label">Department / location</span><input class="info-input" id="f-dept" placeholder="e.g. Warehouse / Bay 2" /></div>
+    <div class="info-field"><span class="info-label">Technician</span><input class="info-input" id="f-tech" placeholder="Your name" /></div>
+    <div class="info-field"><span class="info-label">Date</span><input class="info-input" id="f-date" type="text" /></div>
+  </div>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num" id="s-total">0</div><div class="stat-lbl">Total tasks</div></div>
+    <div class="stat"><div class="stat-num" id="s-done">0</div><div class="stat-lbl">Completed</div></div>
+    <div class="stat"><div class="stat-num" id="s-rem">0</div><div class="stat-lbl">Remaining</div></div>
+    <div class="stat"><div class="stat-num" id="s-pct">0%</div><div class="stat-lbl">Progress</div></div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-meta"><span id="prog-left">0 of 0 tasks complete</span><span id="prog-right">0% done</span></div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div class="clear-banner" id="clear-banner">
+    <div class="clear-banner-text">✓ ALL TASKS COMPLETE — CLEARED FOR REDEPLOYMENT</div>
+    <div class="clear-banner-sub" id="clear-sub"></div>
+  </div>
+  <div class="sections" id="sections-wrap"></div>
+  <div class="footer-area">
+    <textarea class="notes-in" id="notes-field" placeholder="Notes / exceptions / observations..."></textarea>
+    <button class="btn-reset" onclick="resetAll()"><i class="ti ti-refresh" aria-hidden="true"></i> RESET</button>
+  </div>
+</div>
+
+<script>
+const SECTIONS=[
+  {id:"apps",cls:"s-apps",icon:"ti-apps",title:"Apps & games",items:[
+    {id:"a1",lbl:"Uninstall non-standard and personal apps (review full app list)",note:"Settings → Apps → See all apps"},
+    {id:"a2",lbl:"Check Google Play Games — remove personal accounts and save data",note:"Play Games → profile → remove account"},
+    {id:"a3",lbl:"Disable or uninstall bloatware that cannot be fully removed",note:"Settings → Apps → Disable if Uninstall is greyed out"},
+  ]},
+  {id:"media",cls:"s-media",icon:"ti-photo",title:"Photos, videos & files",items:[
+    {id:"m1",lbl:"Delete all photos and videos from Gallery and Files app"},
+    {id:"m2",lbl:"Clear Downloads folder — remove all residual files"},
+    {id:"m3",lbl:"Check internal storage for personal documents (PDFs, docs, etc.)"},
+    {id:"m5",lbl:"Confirm Google Photos auto-sync is off or signed out",note:"Prevents personal account from scooping new photos post-deploy"},
+  ]},
+  {id:"accounts",cls:"s-accounts",icon:"ti-user-circle",title:"Accounts & credentials",items:[
+    {id:"c1",lbl:"Remove all personal Google accounts",note:"Settings → Accounts → Google → Remove account"},
+    {id:"c2",lbl:"Clear all saved passwords in Chrome and any other browser",note:"Chrome → Settings → Passwords → delete all"},
+    {id:"c3",lbl:"Sign out of Microsoft / Microsoft 365 / Outlook accounts"},
+    {id:"c4",lbl:"Sign out of all email clients (Gmail, Outlook, Samsung Mail)"},
+    {id:"c5",lbl:"Remove any VPN profiles and stored credentials",note:"Settings → Network → VPN"},
+    {id:"c6",lbl:"Verify MDM/Intune enrollment is under correct org account",note:"Company Portal → confirm enrolled account is org only"},
+  ]},
+  {id:"browser",cls:"s-browser",icon:"ti-browser",title:"Browser cleanup",items:[
+    {id:"b1",lbl:"Clear Chrome history, cookies, and cached images (All time)",note:"Chrome → Settings → Privacy → Clear browsing data"},
+    {id:"b2",lbl:"Delete saved autofill data — addresses and payment methods"},
+    {id:"b3",lbl:"Remove personal bookmarks and synced tabs"},
+    {id:"b4",lbl:"Sign out of Chrome sync if linked to personal Google account"},
+  ]},
+  {id:"network",cls:"s-network",icon:"ti-wifi",title:"Network & connectivity",items:[
+    {id:"n1",lbl:"Forget all saved Wi-Fi networks — confirm only corp SSIDs remain",note:"Settings → Wi-Fi → long-press network → Forget"},
+    {id:"n2",lbl:"Unpair all Bluetooth devices",note:"Settings → Bluetooth → tap device → Unpair"},
+    {id:"n3",lbl:"Remove any saved hotspot and mobile tethering credentials"},
+  ]},
+  {id:"settings",cls:"s-settings",icon:"ti-adjustments",title:"Settings reset (no factory wipe)",items:[
+    {id:"s1",lbl:"Reset all app preferences to default",note:"Settings → Apps → ⋮ → Reset app preferences"},
+    {id:"s2",lbl:"Reset network settings (Wi-Fi, mobile, Bluetooth)",note:"Settings → General Management → Reset → Reset network settings"},
+    {id:"s3",lbl:"Disable Developer Options if enabled",note:"Settings → Developer Options → toggle off"},
+    {id:"s4",lbl:"Review and disable any user-installed accessibility services"},
+    {id:"s5",lbl:"Set standard lock screen PIN per policy (or confirm MDM pushes it)",note:"Settings → Security → Screen lock"},
+    {id:"s6",lbl:"Confirm display timeout and screen lock delay match policy",note:"Settings → Display → Screen timeout"},
+    {id:"s7",lbl:"Verify date/time is set to automatic network sync",note:"Settings → General Management → Date and time → Auto"},
+  ]},
+  {id:"final",cls:"s-final",icon:"ti-shield-check",title:"Final verification",items:[
+    {id:"f1",lbl:"Confirm no personal accounts remain under Settings → Accounts"},
+    {id:"f2",lbl:"Verify storage shows predominantly free space — no hidden large files"},
+    {id:"f3",lbl:"Confirm device is enrolling or actively enrolled in MDM"},
+    {id:"f4",lbl:"Test Wi-Fi connectivity against a corporate SSID"},
+    {id:"f5",lbl:"Record device serial, asset tag, tech name, and date above"},
+  ]},
+];
+
+const state={};
+const collapsed={};
+SECTIONS.forEach(s=>{collapsed[s.id]=false;});
+
+function fmt(d){return d.toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'numeric'});}
+function initDate(){const f=document.getElementById('f-date');if(f&&!f.value)f.value=fmt(new Date());}
+function updateClock(){const el=document.getElementById('clock-display');if(!el)return;const n=new Date();el.textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');}
+setInterval(updateClock,1000);updateClock();
+
+function getCounts(){let total=0,done=0;SECTIONS.forEach(s=>s.items.forEach(i=>{total++;if(state[i.id])done++;}));return{total,done};}
+function getSecCounts(s){const t=s.items.length,d=s.items.filter(i=>state[i.id]).length;return{t,d};}
+
+function updateUI(){
+  const{total,done}=getCounts();
+  const rem=total-done,pct=total?Math.round(done/total*100):0;
+  document.getElementById('s-total').textContent=total;
+  document.getElementById('s-done').textContent=done;
+  document.getElementById('s-rem').textContent=rem;
+  document.getElementById('s-pct').textContent=pct+'%';
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-left').textContent=done+' of '+total+' tasks complete';
+  document.getElementById('prog-right').textContent=pct+'% done';
+  const sb=document.getElementById('status-badge'),cb=document.getElementById('clear-banner');
+  if(pct===100){
+    sb.className='status-badge status-clear';sb.textContent='✓ CLEARED FOR REDEPLOYMENT';
+    cb.style.display='block';
+    const tech=document.getElementById('f-tech').value||'Unknown tech';
+    const asset=document.getElementById('f-asset').value||'Unknown asset';
+    document.getElementById('clear-sub').textContent='ASSET: '+asset.toUpperCase()+' · TECH: '+tech.toUpperCase()+' · '+fmt(new Date());
+  } else {
+    sb.className='status-badge status-pending';sb.textContent='● PENDING CLEARANCE';
+    cb.style.display='none';
+  }
+  SECTIONS.forEach(s=>{
+    const badge=document.getElementById('badge-'+s.id);if(!badge)return;
+    const{t,d}=getSecCounts(s);
+    if(d===t){badge.className='sec-badge b-done';badge.textContent='DONE';}
+    else if(d>0){badge.className='sec-badge b-partial';badge.textContent=d+'/'+t;}
+    else{badge.className='sec-badge b-empty';badge.textContent=t+' tasks';}
+  });
+}
+
+function toggle(id){
+  state[id]=!state[id];
+  const cb=document.getElementById('chk-'+id),lbl=document.getElementById('lbl-'+id);
+  if(cb)cb.checked=state[id];
+  if(lbl)lbl.className='row-lbl'+(state[id]?' done':'');
+  updateUI();
+}
+
+function toggleSec(id){
+  collapsed[id]=!collapsed[id];
+  const bl=document.getElementById('blk-'+id),ch=document.getElementById('chv-'+id);
+  if(bl)bl.style.display=collapsed[id]?'none':'block';
+  if(ch)ch.className='chevron'+(collapsed[id]?'':' open');
+}
+
+function resetAll(){
+  if(!confirm('Reset all checkboxes and fields?'))return;
+  Object.keys(state).forEach(k=>delete state[k]);
+  document.querySelectorAll('.chk').forEach(c=>{c.checked=false;});
+  document.querySelectorAll('.row-lbl').forEach(l=>{l.className='row-lbl';});
+  ['f-asset','f-serial','f-model','f-dept','f-tech'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const fd=document.getElementById('f-date');if(fd)fd.value=fmt(new Date());
+  const nf=document.getElementById('notes-field');if(nf)nf.value='';
+  updateUI();
+}
+
+function render(){
+  const wrap=document.getElementById('sections-wrap');wrap.innerHTML='';
+  SECTIONS.forEach(s=>{
+    const{t,d}=getSecCounts(s);
+    const bCls=d===t?'sec-badge b-done':d>0?'sec-badge b-partial':'sec-badge b-empty';
+    const bTxt=d===t?'DONE':d>0?d+'/'+t:t+' tasks';
+    const sec=document.createElement('div');sec.className='sec';
+    const itemsHtml=s.items.map(item=>`
+      <div class="row" onclick="toggle('${item.id}')">
+        <div class="chk-wrap"><input type="checkbox" id="chk-${item.id}" class="chk" ${state[item.id]?'checked':''} onclick="event.stopPropagation();toggle('${item.id}')" /></div>
+        <div class="row-body">
+          <div class="row-lbl${state[item.id]?' done':''}" id="lbl-${item.id}">${item.lbl}</div>
+          ${item.note?'<div class="row-note">> '+item.note+'</div>':''}
+        </div>
+      </div>`).join('');
+    sec.innerHTML=`
+      <div class="sec-hdr ${s.cls}" onclick="toggleSec('${s.id}')">
+        <i class="ti ${s.icon} sec-icon" aria-hidden="true"></i>
+        <span class="sec-name">${s.title.toUpperCase()}</span>
+        <span class="${bCls}" id="badge-${s.id}">${bTxt}</span>
+        <i class="ti ti-chevron-right chevron open" id="chv-${s.id}" aria-hidden="true"></i>
+      </div>
+      <div class="items-block" id="blk-${s.id}">${itemsHtml}</div>`;
+    wrap.appendChild(sec);
+  });
+  initDate();updateUI();
+}
+render();
+</script>
